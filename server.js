@@ -40,5 +40,20 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`Healthcare appointment manager running on port ${port}`);
+
+  // Log SMTP config status so it's easy to diagnose email issues in Render logs
+  const smtpHost = process.env.SMTP_HOST;
+  const smtpUser = process.env.SMTP_USER;
+  const smtpPass = process.env.SMTP_PASSWORD;
+  if (smtpHost && smtpUser && smtpPass) {
+    console.log(`✅ SMTP configured: ${smtpHost} as ${smtpUser}`);
+  } else {
+    console.warn('⚠️  SMTP NOT configured. Email/OTP will not be sent.');
+    if (!smtpHost) console.warn('   Missing: SMTP_HOST');
+    if (!smtpUser) console.warn('   Missing: SMTP_USER');
+    if (!smtpPass) console.warn('   Missing: SMTP_PASSWORD');
+    console.warn('   → Set these in the Render dashboard under Environment Variables.');
+  }
+
   reminders.start();
 });

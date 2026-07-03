@@ -131,4 +131,45 @@ router.get('/me', requireAuth, (req, res) => {
   res.json(user);
 });
 
+// GET /api/auth/email-status — check if SMTP is configured (no auth needed, safe to expose)
+router.get('/email-status', (req, res) => {
+  const configured = !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASSWORD);
+  res.json({
+    configured,
+    host: process.env.SMTP_HOST || null,
+    user: process.env.SMTP_USER || null,
+    missing: [
+      !process.env.SMTP_HOST && 'SMTP_HOST',
+      !process.env.SMTP_USER && 'SMTP_USER',
+      !process.env.SMTP_PASSWORD && 'SMTP_PASSWORD',
+    ].filter(Boolean)
+  });
+});
+
+// POST /api/auth/test-email — send a test email to verify SMTP works
+// Body: { to: "recipient@example.com" }
+router.post('/test-email', async (req, res) => {
+  const { to } = req.body;
+  if (!to) return res.status(400).json({ error: 'Provide a "to" email address in the request body' });
+
+  const sent = await sendMail(
+    to,
+    'Test email from Healthcare App',
+    `<p>This is a test email sent at <strong>${new Date().toISOString()}</strong>.</p><p>If you received this, your SMTP configuration is working correctly! ✅</p>`
+  ).catch(err => {
+    console.error('Test email error:', err);
+    return false;
+  });
+
+  if (sent) {
+    res.json({ success: true, message: `Test email sent to ${to}` });
+  } else {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to send test email. Check server logs and SMTP environment variables.',
+      smtpConfigured: !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASSWORD)
+    });
+  }
+});
+
 module.exports = router;
