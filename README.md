@@ -1,26 +1,41 @@
-# Healthcare Appointment & Follow-up Manager
+# 🏥 Healthcare Appointment & Follow-up Manager
 
-## Overview
+A full-stack role-based healthcare management system that enables patients to book appointments, doctors to manage consultations, and administrators to oversee the entire platform efficiently.
 
-Healthcare Appointment & Follow-up Manager is a role-based web application developed to simplify the appointment booking process between patients and doctors. The system provides separate portals for administrators, doctors, and patients, allowing each user to perform tasks according to their responsibilities.
+🌐 **Live Demo:**  
+https://healthcare-appointment-manager-p6m6.onrender.com
 
-Patients can create an account, browse available doctors, book appointments, and manage their bookings. Doctors can access their appointment schedule, review patient information, and record consultation notes and prescriptions. Administrators are responsible for managing doctor accounts, monitoring appointments, and maintaining the overall system.
-
-The project is built using **Node.js**, **Express.js**, **SQLite**, and **Vanilla JavaScript**, making it lightweight, easy to deploy, and suitable for small healthcare organizations or academic demonstrations.
+📂 **GitHub Repository:**  
+https://github.com/pranjul075/-healthcare-appointment-manager
 
 ---
 
-## Features
+## 📖 Overview
 
-### Admin Module
+Healthcare Appointment & Follow-up Manager is a role-based web application developed to simplify appointment scheduling and follow-up management between patients and doctors.
+
+The platform provides dedicated dashboards for:
+
+- **Administrators** to manage doctors and appointments.
+- **Doctors** to view schedules and maintain consultation records.
+- **Patients** to book, reschedule, and track appointments.
+
+The project demonstrates practical implementation of authentication, role-based access control, database management, RESTful APIs, background jobs, and email notification services.
+
+---
+
+## ✨ Features
+
+### 🔹 Admin Module
 
 - Secure administrator login
 - Add, update, and manage doctor accounts
 - View all appointments
-- Manage doctor availability and leave requests
-- Monitor system activities
+- Monitor doctor availability
+- Manage leave requests
+- System-wide activity monitoring
 
-### Patient Module
+### 🔹 Patient Module
 
 - User registration and secure login
 - Browse doctors by specialization
@@ -29,29 +44,30 @@ The project is built using **Node.js**, **Express.js**, **SQLite**, and **Vanill
 - Cancel or reschedule appointments
 - View appointment history
 
-### Doctor Module
+### 🔹 Doctor Module
 
 - Secure doctor login
-- View daily appointment schedule
-- Access patient information before consultation
+- View daily schedules
+- Access patient information
 - Add consultation notes
 - Generate prescriptions
 - Mark appointments as completed
 
-### Additional Features
+### 🔹 Additional Features
 
-- JWT-based authentication
-- Password encryption using bcrypt
+- JWT Authentication
+- Password hashing with bcrypt
+- Role-Based Access Control (RBAC)
 - Email notification support
-- AI-generated appointment summaries (when API key is configured)
-- Background reminder service using cron jobs
-- Double booking prevention
-- Role-based authorization
+- AI-generated appointment summaries
+- Background reminder jobs using Cron
+- Prevention of double bookings
 - RESTful API architecture
+- Modular service-based backend structure
 
 ---
 
-## Technology Stack
+## 🛠 Technology Stack
 
 ### Backend
 
@@ -62,7 +78,7 @@ The project is built using **Node.js**, **Express.js**, **SQLite**, and **Vanill
 
 - HTML5
 - CSS3
-- JavaScript (Vanilla)
+- Vanilla JavaScript
 
 ### Database
 
@@ -76,7 +92,7 @@ The project is built using **Node.js**, **Express.js**, **SQLite**, and **Vanill
 
 ### Additional Packages
 
-- Nodemailer
+- Nodemailer / Resend
 - node-cron
 - dotenv
 - better-sqlite3
@@ -84,9 +100,9 @@ The project is built using **Node.js**, **Express.js**, **SQLite**, and **Vanill
 
 ---
 
-## Project Structure
+## 📁 Project Structure
 
-```
+```text
 healthcare-appointment-manager
 │
 ├── db
@@ -122,31 +138,29 @@ healthcare-appointment-manager
 
 ---
 
-## Installation
+## 🚀 Installation
 
-### Clone the repository
+### Clone the Repository
 
 ```bash
 git clone https://github.com/pranjul075/-healthcare-appointment-manager.git
 ```
 
-### Navigate to the project folder
+### Navigate to the Project Directory
 
 ```bash
 cd -healthcare-appointment-manager
 ```
 
-### Install dependencies
+### Install Dependencies
 
 ```bash
 npm install
 ```
 
-### Create the environment file
+### Configure Environment Variables
 
-Create a `.env` file in the project root and configure the required environment variables.
-
-Example:
+Create a `.env` file in the root directory:
 
 ```env
 PORT=4000
@@ -166,68 +180,88 @@ SMTP_USER=
 SMTP_PASSWORD=
 MAIL_FROM=
 
+RESEND_API_KEY=
+
 ANTHROPIC_API_KEY=
 ```
 
-### Start the application
+### Start the Application
 
 ```bash
 npm start
 ```
 
-Open the application in your browser:
+Open your browser:
 
-```
+```text
 http://localhost:4000
 ```
 
 ---
 
-## User Workflow
+## 🌐 Deployment
+
+The application is deployed on Render.
+
+**Live Application:**
+
+https://healthcare-appointment-manager-p6m6.onrender.com
+
+Deployment includes:
+
+- Backend hosting on Render
+- SQLite database support
+- Environment variable management
+- Background reminder services
+- Email notification integration
+
+---
+
+## 👥 User Workflow
 
 ### Administrator
 
-1. Login using admin credentials.
-2. Add doctor accounts.
-3. Manage doctor information.
-4. Monitor appointments.
+1. Login using administrator credentials.
+2. Add and manage doctor accounts.
+3. Monitor appointments.
+4. Handle doctor availability and leave requests.
 
 ### Patient
 
-1. Register a new account.
+1. Register an account.
 2. Login securely.
 3. Browse doctors.
-4. Select an available time slot.
-5. Book an appointment.
-6. View or manage appointments.
+4. Select available slots.
+5. Book appointments.
+6. Manage existing bookings.
 
 ### Doctor
 
 1. Login to the doctor dashboard.
-2. View upcoming appointments.
+2. View daily appointments.
 3. Review patient information.
 4. Add consultation notes.
-5. Update prescriptions.
-6. Complete appointments.
+5. Generate prescriptions.
+6. Complete consultations.
 
 ---
 
-## API Overview
+## 🔌 API Overview
 
-### Authentication
+### Authentication APIs
 
 - Register User
 - Login User
 - Get Current User
 
-### Admin
+### Admin APIs
 
 - Add Doctor
 - Update Doctor
 - View Doctors
 - View Appointments
 
-### Patient
+### Patient APIs
 
 - List Doctors
 - View Available Slots
@@ -235,58 +269,115 @@ http://localhost:4000
 - Cancel Appointment
 - Reschedule Appointment
 
-### Doctor
+### Doctor APIs
 
 - View Appointments
 - Complete Consultation
-- Manage Leave
+- Manage Leave Requests
 
 ---
 
-## Database
+## 🗄 Database
 
-The project uses SQLite as the database. The database file is automatically created during the first application startup, and all required tables are generated automatically.
+The project uses SQLite as its primary database.
+
+Features include:
+
+- Automatic database creation
+- Automatic table initialization
+- Lightweight storage solution
+- Easy deployment without external database dependencies
 
 ---
 
-## Security Features
+## 🔒 Security Features
 
 - JWT Authentication
-- Password hashing with bcrypt
-- Protected API routes
-- Role-based access control
-- Input validation
-- Prevention of duplicate appointment bookings
+- Password Hashing with bcrypt
+- Protected API Routes
+- Role-Based Authorization
+- Input Validation
+- Duplicate Appointment Prevention
+- Secure Session Management
 
 ---
 
-## Design Highlights
+## 🎨 Design Highlights
 
 - Clean and modular folder structure
-- RESTful API design
-- Lightweight architecture
-- Easy deployment
-- Scalable backend structure
-- Separation of business logic and routes
+- Service-oriented architecture
+- RESTful API design principles
+- Lightweight deployment
+- Easy maintenance
+- Separation of concerns
+- Scalable backend organization
 
 ---
 
-## Future Improvements
+## 🚀 Future Improvements
 
-- Online payment gateway
-- Video consultation
-- Medical record upload
-- Doctor search and advanced filtering
+Planned enhancements include:
+
+- Online payment gateway integration
+- Video consultation support
+- Medical record uploads
+- Advanced doctor search filters
 - SMS notifications
 - Multi-clinic support
-- Analytics dashboard
+- Analytics and reporting dashboard
+- Mobile application support
+- Real-time appointment notifications
 
 ---
 
-## Author
+## 📸 Screenshots
 
-**Pranjul Katiyar**
+Add screenshots here:
+
+```text
+/public/screenshots/home.png
+/public/screenshots/admin-dashboard.png
+/public/screenshots/doctor-dashboard.png
+/public/screenshots/patient-dashboard.png
+```
+
+---
+
+## 👨‍💻 Author
+
+### Pranjul Katiyar
 
 Bachelor of Technology (Computer Science)
 
-Healthcare Appointment & Follow-up Manager was developed as an academic full-stack web development project to demonstrate practical implementation of authentication, role-based access control, appointment scheduling, database management, and REST API development using the Node.js ecosystem.
+Healthcare Appointment & Follow-up Manager was developed as an academic full-stack project to demonstrate practical implementation of:
+
+- Authentication and Authorization
+- Role-Based Access Control (RBAC)
+- REST API Development
+- Database Management
+- Appointment Scheduling Systems
+- Background Task Processing
+- Email Notification Services
+- Secure Application Design
+
+---
+
+## 🔗 Project Links
+
+### 🌐 Live Demo
+
+https://healthcare-appointment-manager-p6m6.onrender.com
+
+### 📂 GitHub Repository
+
+https://github.com/pranjul075/-healthcare-appointment-manager
+
+---
+
+## ⭐ Support
+
+If you found this project useful, please consider giving it a ⭐ on GitHub.
+
+Contributions, suggestions, and feedback are always welcome.
+
+---
