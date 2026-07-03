@@ -1,146 +1,292 @@
 # Healthcare Appointment & Follow-up Manager
 
-A clinic platform with separate portals for patients, doctors and an admin. Patients book appointments and describe symptoms in advance, doctors get an AI-generated pre-visit summary, and both sides get email and Google Calendar updates automatically.
+## Overview
 
-## Stack
+Healthcare Appointment & Follow-up Manager is a role-based web application developed to simplify the appointment booking process between patients and doctors. The system provides separate portals for administrators, doctors, and patients, allowing each user to perform tasks according to their responsibilities.
 
-- Node.js + Express (backend API)
-- SQLite via better-sqlite3 (database, single file, no server needed)
-- Vanilla HTML/CSS/JS (frontend, no build step)
-- JWT for auth, bcrypt for password hashing
-- Anthropic API for pre-visit and post-visit summaries
-- Nodemailer for email
-- Google Calendar API (OAuth 2.0) for calendar events
-- node-cron for medication and appointment reminders
+Patients can create an account, browse available doctors, book appointments, and manage their bookings. Doctors can access their appointment schedule, review patient information, and record consultation notes and prescriptions. Administrators are responsible for managing doctor accounts, monitoring appointments, and maintaining the overall system.
 
-## Project layout
+The project is built using **Node.js**, **Express.js**, **SQLite**, and **Vanilla JavaScript**, making it lightweight, easy to deploy, and suitable for small healthcare organizations or academic demonstrations.
+
+---
+
+## Features
+
+### Admin Module
+
+- Secure administrator login
+- Add, update, and manage doctor accounts
+- View all appointments
+- Manage doctor availability and leave requests
+- Monitor system activities
+
+### Patient Module
+
+- User registration and secure login
+- Browse doctors by specialization
+- View available appointment slots
+- Book appointments
+- Cancel or reschedule appointments
+- View appointment history
+
+### Doctor Module
+
+- Secure doctor login
+- View daily appointment schedule
+- Access patient information before consultation
+- Add consultation notes
+- Generate prescriptions
+- Mark appointments as completed
+
+### Additional Features
+
+- JWT-based authentication
+- Password encryption using bcrypt
+- Email notification support
+- AI-generated appointment summaries (when API key is configured)
+- Background reminder service using cron jobs
+- Double booking prevention
+- Role-based authorization
+- RESTful API architecture
+
+---
+
+## Technology Stack
+
+### Backend
+
+- Node.js
+- Express.js
+
+### Frontend
+
+- HTML5
+- CSS3
+- JavaScript (Vanilla)
+
+### Database
+
+- SQLite
+- better-sqlite3
+
+### Authentication
+
+- JSON Web Token (JWT)
+- bcryptjs
+
+### Additional Packages
+
+- Nodemailer
+- node-cron
+- dotenv
+- better-sqlite3
+- jsonwebtoken
+
+---
+
+## Project Structure
 
 ```
-healthcare-appointment-manager/
-  server.js
-  db/
-    schema.sql
-    database.js
-  middleware/
-    auth.js
-  services/
-    llm.js
-    email.js
-    calendar.js
-    booking.js
-    reminders.js
-  routes/
-    auth.js
-    admin.js
-    patient.js
-    doctor.js
-    calendar.js
-  public/
-    index.html
-    css/style.css
-    js/
+healthcare-appointment-manager
+│
+├── db
+│   ├── database.js
+│   └── schema.sql
+│
+├── middleware
+│   └── auth.js
+│
+├── public
+│   ├── css
+│   ├── js
+│   └── index.html
+│
+├── routes
+│   ├── admin.js
+│   ├── auth.js
+│   ├── doctor.js
+│   ├── patient.js
+│   └── calendar.js
+│
+├── services
+│   ├── booking.js
+│   ├── calendar.js
+│   ├── email.js
+│   ├── llm.js
+│   └── reminders.js
+│
+├── server.js
+├── package.json
+└── README.md
 ```
 
-## Setup
+---
 
-1. Install dependencies
+## Installation
 
+### Clone the repository
+
+```bash
+git clone https://github.com/pranjul075/-healthcare-appointment-manager.git
 ```
+
+### Navigate to the project folder
+
+```bash
+cd -healthcare-appointment-manager
+```
+
+### Install dependencies
+
+```bash
 npm install
 ```
 
-2. Copy the environment file and fill in your own values
+### Create the environment file
 
+Create a `.env` file in the project root and configure the required environment variables.
+
+Example:
+
+```env
+PORT=4000
+
+JWT_SECRET=your_secret_key
+JWT_EXPIRES_IN=7d
+
+DB_PATH=./data/app.db
+
+ADMIN_NAME=Admin
+ADMIN_EMAIL=admin@clinic.com
+ADMIN_PASSWORD=your_password
+
+SMTP_HOST=
+SMTP_PORT=
+SMTP_USER=
+SMTP_PASSWORD=
+MAIL_FROM=
+
+ANTHROPIC_API_KEY=
 ```
-cp .env.example .env
-```
 
-Required for the app to run at all:
-- `JWT_SECRET` - any random string
-- `ADMIN_EMAIL` / `ADMIN_PASSWORD` - the first admin account is created automatically on first start
+### Start the application
 
-Optional but recommended for the full feature set:
-- `ANTHROPIC_API_KEY` - enables the AI pre-visit and post-visit summaries. Without it, the app falls back to a simple templated summary so nothing breaks.
-- `SMTP_HOST` / `SMTP_USER` / `SMTP_PASSWORD` - enables booking confirmations, cancellations, and reminder emails. Without it, emails are skipped and logged to the console instead of failing the request.
-- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` / `GOOGLE_REDIRECT_URI` - enables Google Calendar sync. Without it, calendar events are simply skipped.
-
-3. Start the app
-
-```
+```bash
 npm start
 ```
 
-The app serves both the API and the frontend on `http://localhost:4000` (or whatever `PORT` you set).
+Open the application in your browser:
 
-4. Log in
+```
+http://localhost:4000
+```
 
-- Open the app in a browser.
-- Log in with the admin credentials from your `.env` file.
-- As admin, add doctor accounts under "Doctors" (set their specialisation, working hours and slot length).
-- Patients can self-register from the "Register" tab.
+---
 
-## Google Calendar setup
+## User Workflow
 
-1. In the Google Cloud Console, create a project and enable the Google Calendar API.
-2. Create an OAuth 2.0 Client ID (type: Web application).
-3. Add `http://localhost:4000/api/calendar/callback` (or your deployed URL + `/api/calendar/callback`) as an authorized redirect URI.
-4. Put the client ID, client secret and redirect URI in `.env`.
-5. Each user (patient or doctor) connects their own calendar by calling `GET /api/calendar/connect` while logged in, which returns a Google consent URL to open in the browser. After granting access, their calendar is linked and future appointments will create/update/delete events automatically.
+### Administrator
 
-## API overview
+1. Login using admin credentials.
+2. Add doctor accounts.
+3. Manage doctor information.
+4. Monitor appointments.
 
-All endpoints except `/api/auth/register` and `/api/auth/login` require an `Authorization: Bearer <token>` header.
+### Patient
 
-**Auth**
-- `POST /api/auth/register/request-otp` - `{ name, email, phone, password }`, sends a 6-digit code to the email and holds the registration pending for 10 minutes. If SMTP isn't configured, the response includes a `devCode` field so you can still test locally.
-- `POST /api/auth/register/verify-otp` - `{ email, code }`, creates the patient account and returns a token once the code matches
-- `POST /api/auth/login`
-- `GET /api/auth/me`
+1. Register a new account.
+2. Login securely.
+3. Browse doctors.
+4. Select an available time slot.
+5. Book an appointment.
+6. View or manage appointments.
 
-**Admin**
-- `POST /api/admin/doctors` - create a doctor account and profile
-- `GET /api/admin/doctors`
-- `PUT /api/admin/doctors/:id`
-- `POST /api/admin/doctors/:id/leave` - mark a doctor unavailable on a date, cancels existing bookings and notifies affected patients
-- `GET /api/admin/doctors/:id/leaves`
-- `GET /api/admin/appointments`
+### Doctor
 
-**Patient**
-- `GET /api/patient/doctors?specialisation=`
-- `GET /api/patient/doctors/:id/slots?date=YYYY-MM-DD`
-- `POST /api/patient/appointments` - `{ doctorId, date, time, symptoms }`
-- `GET /api/patient/appointments`
-- `PUT /api/patient/appointments/:id/cancel`
-- `PUT /api/patient/appointments/:id/reschedule` - `{ date, time }`
+1. Login to the doctor dashboard.
+2. View upcoming appointments.
+3. Review patient information.
+4. Add consultation notes.
+5. Update prescriptions.
+6. Complete appointments.
 
-**Doctor**
-- `GET /api/doctor/appointments?date=`
-- `PUT /api/doctor/appointments/:id/complete` - `{ notes, prescription: [{ medicine_name, times_per_day, duration_days }] }`
-- `POST /api/doctor/leave` - `{ date, reason }`
-- `GET /api/doctor/leaves`
+---
 
-**Calendar**
-- `GET /api/calendar/connect`
-- `GET /api/calendar/callback`
+## API Overview
 
-## Database schema
+### Authentication
 
-See `db/schema.sql`. The database file is created automatically on first run at the path set by `DB_PATH` (default `./data/app.db`), along with the tables and the initial admin user.
+- Register User
+- Login User
+- Get Current User
 
-## LLM prompts used
+### Admin
 
-**Pre-visit summary**, run when a patient books an appointment:
+- Add Doctor
+- Update Doctor
+- View Doctors
+- View Appointments
 
-> Analyse these symptoms and return: urgency level (Low / Medium / High), chief complaint, and three suggested questions for the doctor. Symptoms: `<symptoms>`
+### Patient
 
-**Post-visit summary**, run when a doctor completes a visit:
+- List Doctors
+- View Available Slots
+- Book Appointment
+- Cancel Appointment
+- Reschedule Appointment
 
-> Convert these clinical notes into a patient-friendly summary with medication schedule and follow-up steps: `<notes>`
+### Doctor
 
-Both prompts ask for a JSON response and the app falls back to a plain templated summary if the LLM call fails or the API key is not set, so the rest of the flow keeps working.
+- View Appointments
+- Complete Consultation
+- Manage Leave
 
-## Notes on design choices
+---
 
-- Double booking is prevented at two levels: the UI only shows free slots, and the database has a unique constraint on `(doctor_id, appt_date, appt_time)` for active appointments, so a race between two simultaneous booking requests is caught by SQLite itself rather than relying only on a prior check.
-- Medication reminders are computed by spreading `times_per_day` evenly between 8am and 8pm and a background job checks every 10 minutes whether a reminder slot is due, logging each sent reminder so it is never sent twice.
-- Appointment reminder emails go out the morning before the appointment date.
+## Database
+
+The project uses SQLite as the database. The database file is automatically created during the first application startup, and all required tables are generated automatically.
+
+---
+
+## Security Features
+
+- JWT Authentication
+- Password hashing with bcrypt
+- Protected API routes
+- Role-based access control
+- Input validation
+- Prevention of duplicate appointment bookings
+
+---
+
+## Design Highlights
+
+- Clean and modular folder structure
+- RESTful API design
+- Lightweight architecture
+- Easy deployment
+- Scalable backend structure
+- Separation of business logic and routes
+
+---
+
+## Future Improvements
+
+- Online payment gateway
+- Video consultation
+- Medical record upload
+- Doctor search and advanced filtering
+- SMS notifications
+- Multi-clinic support
+- Analytics dashboard
+
+---
+
+## Author
+
+**Pranjul Katiyar**
+
+Bachelor of Technology (Computer Science)
+
+Healthcare Appointment & Follow-up Manager was developed as an academic full-stack web development project to demonstrate practical implementation of authentication, role-based access control, appointment scheduling, database management, and REST API development using the Node.js ecosystem.
