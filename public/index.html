@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meridian Clinic Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">+</span>Meridian<span class="brand-thin">Care</span></div>
+  <div id="guestNav" class="guest-nav">
+    <button class="ghost-btn" data-open-auth="login">Sign In</button>
+    <button class="gold-btn" data-open-auth="register">Register</button>
+  </div>
+  <div id="userBox" class="user-box hidden">
+    <span id="userName"></span>
+    <span id="userRole" class="role-pill"></span>
+    <button id="logoutBtn" class="link-btn">Log out</button>
+  </div>
+</header>
+
+<section id="landing" class="landing">
+  <div class="hero">
+    <div class="hero-copy">
+      <span class="hero-eyebrow">Patient-first care</span>
+      <h1 class="hero-title">Every visit, <em>connected.</em></h1>
+      <p class="hero-sub">
+        One platform for patients, doctors and clinic admins. Share symptoms before you arrive,
+        get an AI-prepared summary ready for your doctor, and keep bookings synced to email and
+        your calendar automatically.
+      </p>
+      <div class="hero-actions">
+        <button class="gold-btn large" data-open-auth="register">Get Started Now</button>
+        <button class="ghost-btn large" data-open-auth="login">Sign In to Account</button>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <svg viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="glow" cx="50%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#3fa78c" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#3fa78c" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#d9a84e"/>
+            <stop offset="100%" stop-color="#7d5e21"/>
+          </linearGradient>
+        </defs>
+        <rect width="420" height="420" fill="url(#glow)"/>
+        <circle cx="210" cy="200" r="150" fill="none" stroke="#262b30" stroke-width="1"/>
+        <circle cx="210" cy="200" r="115" fill="none" stroke="#262b30" stroke-width="1"/>
+        <g transform="translate(210,200)">
+          <circle r="58" fill="#161a1d" stroke="url(#ringGrad)" stroke-width="2"/>
+          <path d="M0 -26 V26 M-26 0 H26" stroke="#d9a84e" stroke-width="10" stroke-linecap="round"/>
+        </g>
+        <g stroke="#3fa78c" stroke-width="2" fill="none" opacity="0.8">
+          <circle cx="210" cy="200" r="150" stroke-dasharray="4 10" />
+        </g>
+        <g fill="#eef0ee">
+          <circle cx="210" cy="50" r="7"/>
+          <circle cx="345" cy="130" r="5"/>
+          <circle cx="345" cy="270" r="5"/>
+          <circle cx="210" cy="350" r="7"/>
+          <circle cx="75" cy="270" r="5"/>
+          <circle cx="75" cy="130" r="5"/>
+        </g>
+        <g stroke="#4a5158" stroke-width="1.2">
+          <line x1="210" y1="200" x2="210" y2="50"/>
+          <line x1="210" y1="200" x2="345" y2="130"/>
+          <line x1="210" y1="200" x2="345" y2="270"/>
+          <line x1="210" y1="200" x2="210" y2="350"/>
+          <line x1="210" y1="200" x2="75" y2="270"/>
+          <line x1="210" y1="200" x2="75" y2="130"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="features">
+    <p class="section-eyebrow">Built for modern care</p>
+    <h2 class="section-title">Three engines running behind every appointment</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🩺</div>
+        <h3>AI Pre-Visit Briefing</h3>
+        <p>Reads the symptoms a patient submits and hands the doctor an urgency level, chief complaint and three questions worth asking, before the visit even starts.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <h3>Conflict-Free Scheduling</h3>
+        <p>Slots are generated from each doctor's real hours, and a database-level lock stops two patients from ever landing on the same appointment.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔔</div>
+        <h3>Automatic Follow-Through</h3>
+        <p>Confirmations, reschedules and medication reminders go out by email and land on both calendars, without anyone lifting a finger.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main id="authScreen" class="auth-screen">
+  <div class="auth-card">
+    <p class="auth-eyebrow">Patient &middot; Doctor &middot; Admin</p>
+    <h1 class="auth-title">Your visits, organised.</h1>
+    <p class="auth-sub">Book appointments, share symptoms ahead of time, and keep every visit summary in one place.</p>
+    <div class="auth-tabs">
+      <button class="tab-btn active" data-tab="login">Log in</button>
+      <button class="tab-btn" data-tab="register">Register</button>
+    </div>
+
+    <form id="loginForm" class="auth-form">
+      <label>Email<input type="email" id="loginEmail" required></label>
+      <label>Password<input type="password" id="loginPassword" required></label>
+      <button type="submit">Log in</button>
+      <p class="form-msg" id="loginMsg"></p>
+    </form>
+
+    <form id="registerForm" class="auth-form hidden">
+      <label>Full name<input type="text" id="regName" required></label>
+      <label>Email<input type="email" id="regEmail" required></label>
+      <label>Phone<input type="text" id="regPhone"></label>
+      <label>Password<input type="password" id="regPassword" required></label>
+      <button type="submit">Send verification code</button>
+      <p class="form-msg" id="regMsg"></p>
+    </form>
+
+    <form id="otpForm" class="auth-form hidden">
+      <p class="auth-sub" style="margin:0">Enter the 6-digit code we sent to <strong id="otpEmailLabel"></strong>.</p>
+      <label>Verification code<input type="text" id="otpCode" maxlength="6" inputmode="numeric" required></label>
+      <button type="submit">Verify and create account</button>
+      <button type="button" id="resendOtpBtn" class="ghost-btn" style="background:none">Resend code</button>
+      <p class="form-msg" id="otpMsg"></p>
+    </form>
+  </div>
+</main>
+
+<main id="patientScreen" class="dashboard hidden">
+  <nav class="side-nav">
+    <button class="nav-btn active" data-view="findDoctor">Book appointment</button>
+    <button class="nav-btn" data-view="myAppointments">My appointments</button>
+  </nav>
+
+  <section id="findDoctor" class="view active">
+    <h2>Find a doctor</h2>
+    <div class="row">
+      <input type="text" id="specSearch" placeholder="Search by specialisation">
+      <button id="searchDoctorsBtn">Search</button>
+    </div>
+    <div id="doctorList" class="card-list"></div>
+  </section>
+
+  <section id="bookingPanel" class="view">
+    <button class="back-btn" data-back="findDoctor">&larr; Back to doctors</button>
+    <h2 id="bookingDoctorName"></h2>
+    <label>Date<input type="date" id="bookingDate"></label>
+    <div id="slotList" class="slot-list"></div>
+    <form id="symptomForm" class="hidden">
+      <label>Describe your symptoms<textarea id="symptomInput" rows="4" required></textarea></label>
+      <button type="submit">Confirm booking</button>
+    </form>
+    <p class="form-msg" id="bookingMsg"></p>
+  </section>
+
+  <section id="myAppointments" class="view">
+    <h2>My appointments</h2>
+    <div id="patientApptList" class="card-list"></div>
+  </section>
+</main>
+
+<main id="doctorScreen" class="dashboard hidden">
+  <nav class="side-nav">
+    <button class="nav-btn active" data-view="doctorAppointments">Appointments</button>
+    <button class="nav-btn" data-view="doctorLeave">Leave</button>
+  </nav>
+
+  <section id="doctorAppointments" class="view active">
+    <h2>Appointments</h2>
+    <label>Filter by date<input type="date" id="doctorDateFilter"></label>
+    <div id="doctorApptList" class="card-list"></div>
+  </section>
+
+  <section id="doctorLeave" class="view">
+    <h2>Mark leave</h2>
+    <label>Date<input type="date" id="leaveDate"></label>
+    <label>Reason<input type="text" id="leaveReason"></label>
+    <button id="markLeaveBtn">Mark unavailable</button>
+    <p class="form-msg" id="leaveMsg"></p>
+    <h3>Upcoming leave</h3>
+    <div id="leaveList" class="card-list"></div>
+  </section>
+</main>
+
+<main id="adminScreen" class="dashboard hidden">
+  <nav class="side-nav">
+    <button class="nav-btn active" data-view="adminDoctors">Doctors</button>
+    <button class="nav-btn" data-view="adminAppointments">All appointments</button>
+  </nav>
+
+  <section id="adminDoctors" class="view active">
+    <h2>Doctor directory</h2>
+    <form id="createDoctorForm" class="inline-form">
+      <input type="text" id="docName" placeholder="Full name" required>
+      <input type="email" id="docEmail" placeholder="Email" required>
+      <input type="password" id="docPassword" placeholder="Temporary password" required>
+      <input type="text" id="docSpec" placeholder="Specialisation" required>
+      <input type="time" id="docStart" value="09:00" required>
+      <input type="time" id="docEnd" value="17:00" required>
+      <input type="number" id="docSlot" placeholder="Slot minutes" value="30" min="5">
+      <button type="submit">Add doctor</button>
+    </form>
+    <p class="form-msg" id="docMsg"></p>
+    <div id="doctorDirectory" class="card-list"></div>
+  </section>
+
+  <section id="adminAppointments" class="view">
+    <h2>All appointments</h2>
+    <div id="adminApptList" class="card-list"></div>
+  </section>
+</main>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/patient.js"></script>
+<script src="js/doctor.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
