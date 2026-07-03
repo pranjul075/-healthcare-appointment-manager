@@ -16,7 +16,7 @@ function issueToken(user) {
   );
 }
 
-router.post('/register/request-otp', async (req, res) => {
+router.post('/register', async (req, res) => {
   const { name, email, password, phone } = req.body;
   if (!name || !email || !password) {
     return res.status(400).json({ error: 'Name, email and password are required' });
@@ -27,80 +27,13 @@ router.post('/register/request-otp', async (req, res) => {
     return res.status(409).json({ error: 'An account with this email already exists' });
   }
 
-  const code = otp.generateCode();
   const passwordHash = bcrypt.hashSync(password, 10);
-  const expiresAt = otp.expiryInMinutes(10);
-
-  db.prepare(
-    `INSERT INTO pending_registrations (email, name, phone, password_hash, otp_code, attempts, expires_at)
-     VALUES (?, ?, ?, ?, ?, 0, ?)
-     ON CONFLICT(email) DO UPDATE SET
-       name = excluded.name,
-       phone = excluded.phone,
-       password_hash = excluded.password_hash,
-       otp_code = excluded.otp_code,
-       attempts = 0,
-       expires_at = excluded.expires_at`
-  ).run(email, name, phone || null, passwordHash, code, expiresAt);
-
-  let mailSent = false;
-  try {
-    mailSent = await sendMail(
-      email,
-      'Your verification code',
-      `<p>Hello ${name},</p><p>Your verification code is <strong>${code}</strong>. It expires in 10 minutes.</p>`
-    );
-  } catch (mailErr) {
-    console.error('Failed to send OTP email:', mailErr.message);
-  }
-
-  const response = { message: mailSent ? 'Verification code sent to your email' : 'Email could not be sent. Use the code below to complete registration.' };
-  if (!mailSent) {
-    // Expose code when mail is not configured or failed (dev/misconfigured environment)
-    response.devCode = code;
-  }
-  res.status(200).json(response);
-});
-
-router.post('/register/verify-otp', (req, res) => {
-  const { email, code } = req.body;
-  if (!email || !code) {
-    return res.status(400).json({ error: 'Email and code are required' });
-  }
-
-  const pending = db.prepare('SELECT * FROM pending_registrations WHERE email = ?').get(email);
-  if (!pending) {
-    return res.status(404).json({ error: 'No pending registration found for this email' });
-  }
-
-  if (otp.isExpired(pending.expires_at)) {
-    db.prepare('DELETE FROM pending_registrations WHERE email = ?').run(email);
-    return res.status(410).json({ error: 'Code expired, please register again' });
-  }
-
-  if (pending.attempts >= 5) {
-    db.prepare('DELETE FROM pending_registrations WHERE email = ?').run(email);
-    return res.status(429).json({ error: 'Too many attempts, please register again' });
-  }
-
-  if (pending.otp_code !== String(code)) {
-    db.prepare('UPDATE pending_registrations SET attempts = attempts + 1 WHERE email = ?').run(email);
-    return res.status(401).json({ error: 'Incorrect code' });
-  }
-
-  const existingUser = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
-  if (existingUser) {
-    db.prepare('DELETE FROM pending_registrations WHERE email = ?').run(email);
-    return res.status(409).json({ error: 'An account with this email already exists' });
-  }
-
+  
   const info = db
     .prepare('INSERT INTO users (email, password, name, phone, role) VALUES (?, ?, ?, ?, ?)')
-    .run(pending.email, pending.password_hash, pending.name, pending.phone, 'patient');
+    .run(email, passwordHash, name, phone || null, 'patient');
 
-  db.prepare('DELETE FROM pending_registrations WHERE email = ?').run(email);
-
-  const user = { id: info.lastInsertRowid, email: pending.email, name: pending.name, role: 'patient' };
+  const user = { id: info.lastInsertRowid, email, name, role: 'patient' };
   res.status(201).json({ token: issueToken(user), user });
 });
 

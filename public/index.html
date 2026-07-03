@@ -126,16 +126,8 @@
       <label>Email<input type="email" id="regEmail" required></label>
       <label>Phone<input type="text" id="regPhone"></label>
       <label>Password<input type="password" id="regPassword" required></label>
-      <button type="submit">Send verification code</button>
+      <button type="submit">Create account</button>
       <p class="form-msg" id="regMsg"></p>
-    </form>
-
-    <form id="otpForm" class="auth-form hidden">
-      <p class="auth-sub" style="margin:0">Enter the 6-digit code we sent to <strong id="otpEmailLabel"></strong>.</p>
-      <label>Verification code<input type="text" id="otpCode" maxlength="6" inputmode="numeric" required></label>
-      <button type="submit">Verify and create account</button>
-      <button type="button" id="resendOtpBtn" class="ghost-btn" style="background:none">Resend code</button>
-      <p class="form-msg" id="otpMsg"></p>
     </form>
   </div>
 </main>
