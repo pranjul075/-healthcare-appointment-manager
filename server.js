@@ -2,6 +2,14 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 
+// Catch unhandled promise rejections so the server logs them instead of crashing silently
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+});
+
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const patientRoutes = require('./routes/patient');

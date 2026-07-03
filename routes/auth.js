@@ -43,14 +43,20 @@ router.post('/register/request-otp', async (req, res) => {
        expires_at = excluded.expires_at`
   ).run(email, name, phone || null, passwordHash, code, expiresAt);
 
-  await sendMail(
-    email,
-    'Your verification code',
-    `<p>Hello ${name},</p><p>Your verification code is <strong>${code}</strong>. It expires in 10 minutes.</p>`
-  );
+  let mailSent = false;
+  try {
+    mailSent = await sendMail(
+      email,
+      'Your verification code',
+      `<p>Hello ${name},</p><p>Your verification code is <strong>${code}</strong>. It expires in 10 minutes.</p>`
+    );
+  } catch (mailErr) {
+    console.error('Failed to send OTP email:', mailErr.message);
+  }
 
-  const response = { message: 'Verification code sent to your email' };
-  if (!process.env.SMTP_HOST) {
+  const response = { message: mailSent ? 'Verification code sent to your email' : 'Email could not be sent. Use the code below to complete registration.' };
+  if (!mailSent) {
+    // Expose code when mail is not configured or failed (dev/misconfigured environment)
     response.devCode = code;
   }
   res.status(200).json(response);
